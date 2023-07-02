@@ -59,11 +59,6 @@ do
     aws secretsmanager update-secret --secret-id $VAULT_SECRET_ARN --secret-string "{$VAULT_SECRET_VALUE}"
   fi
 
-  if [ $? -ne 0 ]; then
-    printf "Unable to store secret in secret manager: [%s]\n" "$VAULT_SECRET_MANAGER"
-    printf "Vault recovery keys can be found here: [%s]\n" "$VAULT_INIT_FILE"
-  fi
-
 done
 
 exit 0

@@ -22,7 +22,7 @@ do
   fi
 
   if [ $VAULT_STATUS_INIT = "true" ]; then
-    printf "Vault is initialized\n"
+    printf "Vault is initialized: [%s]\n" "$VAULT_STATUS_INIT"
     sleep 1
     continue
   fi
@@ -38,7 +38,7 @@ do
     VAULT_RECOVER_INDEX=$((VAULT_RECOVER_INDEX+1))
   done
 
-  aws secretsmanager create-secret --name $VAULT_ENVIRONMENT-vault --secret-string "{$VAULT_SECRET_VALUE}"
+  aws secretsmanager create-secret --name "$VAULT_ENVIRONMENT-vault" --secret-string "{$VAULT_SECRET_VALUE}" --force-overwrite-replica-secret
 
 done
 

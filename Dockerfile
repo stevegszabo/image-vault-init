@@ -1,9 +1,9 @@
 FROM ubuntu:22.04
 
-ARG APPLICATION_HOME=/home/vault
-ARG APPLICATION_USER=vault
-ARG APPLICATION_GROUP=vault
-ARG APPLICATION_VENV=environment
+ENV APPLICATION_HOME=/home/vault
+ENV APPLICATION_USER=vault
+ENV APPLICATION_GROUP=vault
+ENV APPLICATION_VENV=environment
 
 RUN apt-get update && apt-get upgrade -y && apt-get install -y lsb-release gpg wget jq python3 python3-pip python3.10-venv && apt-get clean
 RUN wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg

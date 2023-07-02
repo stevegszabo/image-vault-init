@@ -44,7 +44,7 @@ do
     VAULT_RECOVER_INDEX=$((VAULT_RECOVER_INDEX+1))
   done
 
-  aws secretsmanager create-secret --name "$VAULT_SECRET_MANAGER" --secret-string "{$VAULT_SECRET_VALUE}" --force-overwrite-replica-secret
+  aws secretsmanager create-secret --name "$VAULT_SECRET_MANAGER" --secret-string "{$VAULT_SECRET_VALUE}"
 
   if [ $? -ne 0 ]; then
     printf "Unable to store secret in secret manager: [%s]\n" "$VAULT_SECRET_MANAGER"

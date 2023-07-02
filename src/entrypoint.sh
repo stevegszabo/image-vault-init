@@ -1,8 +1,9 @@
 #!/bin/bash
 
-VAULT_VIRTUAL=/home/vault/environment/bin/activate
 VAULT_ENVIRONMENT=${VAULT_ENVIRONMENT-eks-engineering-01}
-VAULT_INIT_FILE=$VAULT_ENVIRONMENT-vault
+VAULT_DIRNAME=/home/vault
+VAULT_INIT_FILE=$VAULT_DIRNAME/$VAULT_ENVIRONMENT
+VAULT_VIRTUAL=$VAULT_DIRNAME/environment/bin/activate
 VAULT_RECOVER_INDEX=1
 VAULT_SHUTDOWN=0
 
@@ -40,7 +41,7 @@ do
     VAULT_RECOVER_INDEX=$((VAULT_RECOVER_INDEX+1))
   done
 
-  aws secretsmanager create-secret --name "$VAULT_INIT_FILE" --secret-string "{$VAULT_SECRET_VALUE}" --force-overwrite-replica-secret
+  aws secretsmanager create-secret --name "$VAULT_ENVIRONMENT-vault" --secret-string "{$VAULT_SECRET_VALUE}" --force-overwrite-replica-secret
 
 done
 

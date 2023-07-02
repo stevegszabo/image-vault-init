@@ -15,4 +15,4 @@ RUN chown -R $APPLICATION_USER:$APPLICATION_GROUP $APPLICATION_HOME
 
 USER vault
 RUN python3 -m venv $APPLICATION_HOME/$APPLICATION_VENV && . $APPLICATION_HOME/$APPLICATION_VENV/bin/activate && pip3 install awscli
-ENTRYPOINT ["/usr/bin/bash", "$APPLICATION_HOME/entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/bash", "/home/vault/entrypoint.sh"]

@@ -4,9 +4,9 @@
 #set -o pipefail
 
 VAULT_ENVIRONMENT=${VAULT_ENVIRONMENT-eks-engineering-01}
-VAULT_DIRNAME=$HOME
-VAULT_INIT_FILE=$VAULT_DIRNAME/$VAULT_ENVIRONMENT
-VAULT_VIRTUAL=$VAULT_DIRNAME/environment/bin/activate
+VAULT_INIT_FILE=$HOME/$VAULT_ENVIRONMENT
+VAULT_VIRTUAL=$HOME/environment/bin/activate
+VAULT_SECRET_MANAGER=$VAULT_ENVIRONMENT-vault
 VAULT_RECOVER_INDEX=1
 VAULT_SHUTDOWN=0
 
@@ -44,12 +44,12 @@ do
     VAULT_RECOVER_INDEX=$((VAULT_RECOVER_INDEX+1))
   done
 
-  aws secretsmanager create-secret --name "$VAULT_ENVIRONMENT-vault" --secret-string "{$VAULT_SECRET_VALUE}" --force-overwrite-replica-secret
+  aws secretsmanager create-secret --name "$VAULT_SECRET_MANAGER" --secret-string "{$VAULT_SECRET_VALUE}" --force-overwrite-replica-secret
 
   VAULT_SECRET_CREATION=$?
 
   if [ $VAULT_SECRET_CREATION -ne 0 ]; then
-    printf "Unable to store secret in secret manager: [%s]\n" "$VAULT_SECRET_CREATION"
+    printf "Unable to store secret in secret manager: [%s]\n" "$VAULT_SECRET_MANAGER"
     printf "Vault will be initialized however we lost the recovery keys!!!\n"
   fi
 

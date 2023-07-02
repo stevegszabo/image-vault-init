@@ -51,10 +51,12 @@ do
 
   VAULT_SECRET_ARN=$(aws secretsmanager list-secrets | jq -r "$VAULT_FILTER")
 
-  if [ ! -z "$VAULT_SECRET_ARN" ]; then
-    aws secretsmanager update-secret --secret-id $VAULT_SECRET_ARN --secret-string "{$VAULT_SECRET_VALUE}"
-  else
+  if [ -z "$VAULT_SECRET_ARN" ]; then
+    printf "Create secret: [%s]\n" "$VAULT_SECRET_MANAGER"
     aws secretsmanager create-secret --name "$VAULT_SECRET_MANAGER" --secret-string "{$VAULT_SECRET_VALUE}"
+  else
+    printf "Update secret: [%s]\n" "$VAULT_SECRET_MANAGER"
+    aws secretsmanager update-secret --secret-id $VAULT_SECRET_ARN --secret-string "{$VAULT_SECRET_VALUE}"
   fi
 
   if [ $? -ne 0 ]; then

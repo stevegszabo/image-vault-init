@@ -37,7 +37,7 @@ do
     VAULT_RECOVER_INDEX=$((VAULT_RECOVER_INDEX+1))
   done
 
-  aws secretsmanager create-secret --name "$VAULT_ENVIRONMENT-vault" --secret-string "{$VAULT_SECRET_VALUE}" --force-overwrite-replica-secret
+  aws secretsmanager create-secret --name "$VAULT_INIT_FILE" --secret-string "{$VAULT_SECRET_VALUE}" --force-overwrite-replica-secret
 
 done
 

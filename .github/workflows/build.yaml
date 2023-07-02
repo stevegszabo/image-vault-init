@@ -17,5 +17,3 @@ jobs:
         push: true
         context: .
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.workflow }}:${{ env.DOCKER_TAG }}
-        build-args: |
-          DOCKER_TAG=${{ env.DOCKER_TAG }}

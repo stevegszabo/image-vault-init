@@ -48,7 +48,7 @@ do
 
   if [ $? -ne 0 ]; then
     printf "Unable to store secret in secret manager: [%s]\n" "$VAULT_SECRET_MANAGER"
-    printf "Vault recover keys can be found here: [%s]\n" "$VAULT_INIT_FILE"
+    printf "Vault recovery keys can be found here: [%s]\n" "$VAULT_INIT_FILE"
   fi
 
 done

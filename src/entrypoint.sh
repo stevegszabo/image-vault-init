@@ -1,11 +1,13 @@
 #!/bin/bash
 
+VAULT_VIRTUAL=/home/vault/environment/bin/activate
 VAULT_ENVIRONMENT=${VAULT_ENVIRONMENT-eks-engineering-01}
 VAULT_INIT_FILE=$VAULT_ENVIRONMENT-vault
 VAULT_RECOVER_INDEX=1
 VAULT_SHUTDOWN=0
 
-source $HOME/environment/bin/activate || exit 1
+[ -f $VAULT_VIRTUAL ] && source $VAULT_VIRTUAL
+
 export VAULT_ADDR=http://localhost:8200/
 
 trap "VAULT_SHUTDOWN=1" SIGINT SIGTERM

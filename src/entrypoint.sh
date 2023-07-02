@@ -14,13 +14,6 @@ VAULT_SHUTDOWN=0
 
 export VAULT_ADDR=http://localhost:8200/
 
-
-id
-ls -ld $VAULT_DIRNAME
-
-
-
-
 trap "VAULT_SHUTDOWN=1" SIGINT SIGTERM
 
 while [ $VAULT_SHUTDOWN -eq 0 ];

@@ -5,6 +5,7 @@ VAULT_INIT_FILE=$VAULT_ENVIRONMENT-vault
 VAULT_RECOVER_INDEX=1
 VAULT_SHUTDOWN=0
 
+source $HOME/environment/bin/activate || exit 1
 export VAULT_ADDR=http://localhost:8200/
 
 trap "VAULT_SHUTDOWN=1" SIGINT SIGTERM

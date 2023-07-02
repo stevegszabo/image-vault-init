@@ -23,13 +23,13 @@ do
 
   if [ -z "$VAULT_STATUS_INIT" ]; then
     printf "Unable to determine vault state: vault service running?\n"
-    sleep 1
+    sleep 60
     continue
   fi
 
   if [ "$VAULT_STATUS_INIT" = "true" ]; then
     printf "Vault currently initialized: [%s]\n" "$VAULT_STATUS_INIT"
-    sleep 1
+    sleep 60
     continue
   fi
 

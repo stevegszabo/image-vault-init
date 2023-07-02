@@ -6,7 +6,7 @@ Vault sidecar to initialize vault service
 - [AWS KMS Unseal tutorial](https://developer.hashicorp.com/vault/tutorials/auto-unseal/autounseal-aws-kms)
 - [AWS KMS Unseal vendor sample](https://github.com/hashicorp/vault-guides/tree/master/operations/aws-kms-unseal/terraform-aws)
 
-Vault helm chart values:
+Vault helm chart values
 
 ```
 server:

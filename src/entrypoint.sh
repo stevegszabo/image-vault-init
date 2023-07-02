@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#set -o errexit
+#set -o pipefail
+
 VAULT_ENVIRONMENT=${VAULT_ENVIRONMENT-eks-engineering-01}
 VAULT_DIRNAME=/home/vault
 VAULT_INIT_FILE=$VAULT_DIRNAME/$VAULT_ENVIRONMENT
@@ -10,6 +13,13 @@ VAULT_SHUTDOWN=0
 [ -f $VAULT_VIRTUAL ] && source $VAULT_VIRTUAL
 
 export VAULT_ADDR=http://localhost:8200/
+
+
+id
+ls -ld $VAULT_DIRNAME
+
+
+
 
 trap "VAULT_SHUTDOWN=1" SIGINT SIGTERM
 

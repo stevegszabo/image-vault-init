@@ -4,9 +4,14 @@
 #set -o pipefail
 
 VAULT_ENVIRONMENT=${VAULT_ENVIRONMENT-eks-engineering-01}
+VAULT_SECRET_MANAGER=$VAULT_ENVIRONMENT-vault
+
 VAULT_INIT_FILE=$HOME/$VAULT_ENVIRONMENT
 VAULT_VIRTUAL=$HOME/environment/bin/activate
-VAULT_SECRET_MANAGER=$VAULT_ENVIRONMENT-vault
+
+VAULT_FILTER='.SecretList[]|select(.Name=="%s")|.ARN'
+VAULT_FILTER=$(printf "$VAULT_FILTER" $VAULT_SECRET_MANAGER)
+
 VAULT_RECOVER_INDEX=1
 VAULT_SHUTDOWN=0
 
@@ -44,7 +49,13 @@ do
     VAULT_RECOVER_INDEX=$((VAULT_RECOVER_INDEX+1))
   done
 
-  aws secretsmanager create-secret --name "$VAULT_SECRET_MANAGER" --secret-string "{$VAULT_SECRET_VALUE}"
+  VAULT_SECRET_ARN=$(aws secretsmanager list-secrets | jq -r "$VAULT_FILTER")
+
+  if [ ! -z "$VAULT_SECRET_ARN" ]; then
+    aws secretsmanager update-secret --secret-id $VAULT_SECRET_ARN --secret-string "{$VAULT_SECRET_VALUE}"
+  else
+    aws secretsmanager create-secret --name "$VAULT_SECRET_MANAGER" --secret-string "{$VAULT_SECRET_VALUE}"
+  fi
 
   if [ $? -ne 0 ]; then
     printf "Unable to store secret in secret manager: [%s]\n" "$VAULT_SECRET_MANAGER"

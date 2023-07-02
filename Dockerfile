@@ -4,10 +4,13 @@ ENV APPLICATION_HOME=/home/vault
 ENV APPLICATION_USER=vault
 ENV APPLICATION_GROUP=vault
 ENV APPLICATION_VENV=environment
+ENV APPLICATION_KEYRING=/usr/share/keyrings/hashicorp-archive-keyring.gpg
+ENV APPLICATION_SOURCE=/etc/apt/sources.list.d/hashicorp.list
+ENV APPLICATION_HASHICORP=https://apt.releases.hashicorp.com
 
 RUN apt-get update && apt-get upgrade -y && apt-get install -y lsb-release gpg wget jq python3 python3-pip python3.10-venv && apt-get clean
-RUN wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/hashicorp.list
+RUN wget -O- $APPLICATION_HASHICORP/gpg | gpg --dearmor -o $APPLICATION_KEYRING
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=$APPLICATION_KEYRING] $APPLICATION_HASHICORP $(lsb_release -cs) main" | tee $APPLICATION_SOURCE
 RUN apt-get update && apt-get install --reinstall -y vault
 
 COPY src/entrypoint.sh $APPLICATION_HOME/entrypoint.sh

@@ -24,7 +24,6 @@ while [ $VAULT_SHUTDOWN -eq 0 ];
 do
 
   VAULT_STATUS_INIT=$(vault status -format=json | jq -r .initialized)
-  VAULT_STATUS_SEAL=$(vault status -format=json | jq -r .sealed)
 
   if [ -z "$VAULT_STATUS_INIT" ]; then
     printf "Unable to determine vault init state: vault service running?\n"
@@ -32,20 +31,8 @@ do
     continue
   fi
 
-  if [ -z "$VAULT_STATUS_SEAL" ]; then
-    printf "Unable to determine vault seal state: vault service running?\n"
-    sleep 5
-    continue
-  fi
-
   if [ "$VAULT_STATUS_INIT" = "true" ]; then
     printf "Vault currently initialized: [%s]\n" "$VAULT_STATUS_INIT"
-    sleep 5
-    continue
-  fi
-
-  if [ "$VAULT_STATUS_SEAL" = "true" ]; then
-    printf "Vault currently sealed: [%s]\n" "$VAULT_STATUS_SEAL"
     sleep 5
     continue
   fi

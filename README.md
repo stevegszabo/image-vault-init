@@ -10,7 +10,7 @@ Vault helm chart values
 server:
   extraContainers:
   - name: vault-init
-    image: docker.io/steveszabo/vault-init:6111e19
+    image: docker.io/steveszabo/vault-init:latest
     env:
     - name: VAULT_ADDR
       value: https://127.0.0.1:8200

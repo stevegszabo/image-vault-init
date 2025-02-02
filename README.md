@@ -13,7 +13,7 @@ server:
     image: docker.io/steveszabo/vault-init:latest
     env:
     - name: VAULT_ADDR
-      value: https://127.0.0.1:8200
+      value: http://127.0.0.1:8200
     securityContext:
       runAsNonRoot: true
       runAsUser: 999

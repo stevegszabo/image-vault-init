@@ -22,7 +22,7 @@ do
     fi
 
     printf "Initializing Vault\n"
-    sleep 5
+    vault operator init
 
 done
 

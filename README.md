@@ -3,6 +3,7 @@
 Vault sidecar to initialize vault service
 
 - [Unseal concept](https://developer.hashicorp.com/vault/docs/concepts/seal)
+- [GCP KMS Unseal](https://developer.hashicorp.com/vault/docs/configuration/seal/gcpckms)
 - [GCP KMS Unseal tutorial](https://developer.hashicorp.com/vault/tutorials/auto-unseal/autounseal-gcp-kms)
 
 Vault helm chart values

@@ -12,8 +12,8 @@ server:
   - name: vault-init
     image: docker.io/steveszabo/vault-init:6111e19
     env:
-    - name: VAULT_ENVIRONMENT
-      value: gke-engineering-01
+    - name: VAULT_ADDR
+      value: https://127.0.0.1:8200
     securityContext:
       runAsNonRoot: true
       runAsUser: 999

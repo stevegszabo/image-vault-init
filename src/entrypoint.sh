@@ -54,9 +54,7 @@ do
         VAULT_RECOVER_INDEX=$((VAULT_RECOVER_INDEX+1))
     done
 
-    printf "Update secret: [%s][%s]\n" "$GCLOUD_SECRET" "$VAULT_SECRET_VALUE"
-
-    echo $VAULT_SECRET_VALUE > $VAULT_SEAL_FILE
+    printf "{ %s }\n" "$VAULT_SECRET_VALUE" > $VAULT_SEAL_FILE
 
     if [ -z "$(gcloud secrets list --project=$GCLOUD_PROJECT --format=json | jq -r "$GCLOUD_SECRET_FILTER")" ]; then
         gcloud secrets create $GCLOUD_SECRET --data-file=$VAULT_SEAL_FILE --project=$GCLOUD_PROJECT --replication-policy=user-managed --locations=$GCLOUD_LOCATIONS

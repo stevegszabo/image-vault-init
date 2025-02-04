@@ -3,6 +3,7 @@
 VAULT_SHUTDOWN=0
 VAULT_RECOVER_INDEX=1
 VAULT_INIT_FILE=$HOME/init
+VAULT_SEAL_FILE=$VAULT_INIT_FILE.json
 
 GCLOUD_PROJECT=${GCLOUD_PROJECT-project}
 GCLOUD_LOCATIONS=${GCLOUD_LOCATIONS-locations}
@@ -18,6 +19,10 @@ account = $GCLOUD_ACCOUNT
 project = $GCLOUD_PROJECT
 disable_usage_reporting = True
 EOF
+
+GCLOUD_PROJECT_ID=$(gcloud projects describe $GCLOUD_PROJECT --format=json | jq -r .projectNumber)
+GCLOUD_SECRET_ID=projects/$GCLOUD_PROJECT_ID/secrets/$GCLOUD_SECRET
+GCLOUD_SECRET_FILTER=$(printf '.[]|select(.name == "%s")' $GCLOUD_SECRET_ID)
 
 trap "VAULT_SHUTDOWN=1" SIGINT SIGTERM
 
@@ -51,8 +56,12 @@ do
 
     printf "Update VAULT_SECRET_VALUE: [%s]\n" "$VAULT_SECRET_VALUE"
 
+    echo $VAULT_SECRET_VALUE > $VAULT_SEAL_FILE
+
     gcloud secrets list --project=$GCLOUD_PROJECT
-    gcloud secrets create $GCLOUD_SECRET --data-file=todo --project=$GCLOUD_PROJECT --replication-policy=user-managed --locations=$GCLOUD_LOCATIONS
+    gcloud secrets list --project=$GCLOUD_PROJECT --format=json | jq -r "$GCLOUD_SECRET_FILTER"
+    gcloud secrets create $GCLOUD_SECRET --data-file=$VAULT_SEAL_FILE --project=$GCLOUD_PROJECT --replication-policy=user-managed --locations=$GCLOUD_LOCATIONS
+    gcloud secrets versions add $GCLOUD_SECRET --data-file=$VAULT_SEAL_FILE --project=$GCLOUD_PROJECT
     echo y | gcloud secrets delete $GCLOUD_SECRET --project=$GCLOUD_PROJECT
 
 done

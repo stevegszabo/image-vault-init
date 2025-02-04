@@ -2,6 +2,19 @@
 
 VAULT_SHUTDOWN=0
 
+GCLOUD_PROJECT=${GCLOUD_PROJECT-project}
+GCLOUD_ACCOUNT=${GCLOUD_ACCOUNT-email}
+GCLOUD_CONFIGS=$HOME/.config/gcloud/configurations
+
+mkdir -p $GCLOUD_CONFIGS
+
+cat > $GCLOUD_CONFIGS/config_default <<EOF
+[core]
+account = $GCLOUD_ACCOUNT
+project = $GCLOUD_PROJECT
+disable_usage_reporting = False
+EOF
+
 trap "VAULT_SHUTDOWN=1" SIGINT SIGTERM
 
 while [ $VAULT_SHUTDOWN -eq 0 ];

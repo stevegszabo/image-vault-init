@@ -12,7 +12,7 @@ cat > $GCLOUD_CONFIGS/config_default <<EOF
 [core]
 account = $GCLOUD_ACCOUNT
 project = $GCLOUD_PROJECT
-disable_usage_reporting = False
+disable_usage_reporting = True
 EOF
 
 trap "VAULT_SHUTDOWN=1" SIGINT SIGTERM

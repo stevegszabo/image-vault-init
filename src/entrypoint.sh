@@ -54,7 +54,7 @@ do
         VAULT_RECOVER_INDEX=$((VAULT_RECOVER_INDEX+1))
     done
 
-    printf "Update VAULT_SECRET_VALUE: [%s]\n" "$VAULT_SECRET_VALUE"
+    printf "Update secret: [%s][%s]\n" "$GCLOUD_SECRET" "$VAULT_SECRET_VALUE"
 
     echo $VAULT_SECRET_VALUE > $VAULT_SEAL_FILE
 

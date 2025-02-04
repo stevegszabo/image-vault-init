@@ -1,6 +1,8 @@
 #!/bin/bash
 
 VAULT_SHUTDOWN=0
+VAULT_RECOVER_INDEX=1
+VAULT_INIT_FILE=$HOME/init
 
 GCLOUD_PROJECT=${GCLOUD_PROJECT-project}
 GCLOUD_LOCATION=${GCLOUD_LOCATION-location}
@@ -42,8 +44,18 @@ do
         continue
     fi
 
-    printf "Initializing Vault\n"
-    vault operator init
+    vault operator init > $VAULT_INIT_FILE
+
+    VAULT_TOKEN="$(grep 'Initial Root Token' $VAULT_INIT_FILE | awk -F: '{print $NF}' | tr -d ' ')"
+    VAULT_SECRET_VALUE=$(printf '"root": "%s"' "$VAULT_TOKEN")
+
+    for VAULT_RECOVER_KEY in $(grep 'Recovery Key' $VAULT_INIT_FILE | awk '{print $NF}' | tr -d ' ')
+    do
+        VAULT_SECRET_VALUE=$(printf '%s, "recovery-%d": "%s"' "$VAULT_SECRET_VALUE" "$VAULT_RECOVER_INDEX" "$VAULT_RECOVER_KEY")
+        VAULT_RECOVER_INDEX=$((VAULT_RECOVER_INDEX+1))
+    done
+
+    printf "VAULT_SECRET_VALUE: [%s]\n" "$VAULT_SECRET_VALUE"
 
 done
 

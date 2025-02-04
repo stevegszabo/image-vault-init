@@ -3,6 +3,7 @@
 VAULT_SHUTDOWN=0
 
 GCLOUD_PROJECT=${GCLOUD_PROJECT-project}
+GCLOUD_LOCATION=${GCLOUD_LOCATION-location}
 GCLOUD_ACCOUNT=${GCLOUD_ACCOUNT-email}
 GCLOUD_CONFIGS=$HOME/.config/gcloud/configurations
 
@@ -14,6 +15,13 @@ account = $GCLOUD_ACCOUNT
 project = $GCLOUD_PROJECT
 disable_usage_reporting = True
 EOF
+
+gcloud kms keyrings list --project=$GCLOUD_PROJECT --location=$GCLOUD_LOCATION
+
+
+
+
+
 
 trap "VAULT_SHUTDOWN=1" SIGINT SIGTERM
 

@@ -5,8 +5,9 @@ VAULT_RECOVER_INDEX=1
 VAULT_INIT_FILE=$HOME/init
 
 GCLOUD_PROJECT=${GCLOUD_PROJECT-project}
-GCLOUD_LOCATION=${GCLOUD_LOCATION-location}
+GCLOUD_LOCATIONS=${GCLOUD_LOCATIONS-locations}
 GCLOUD_ACCOUNT=${GCLOUD_ACCOUNT-email}
+GCLOUD_SECRET=${GCLOUD_SECRET-secret}
 GCLOUD_CONFIGS=$HOME/.config/gcloud/configurations
 
 mkdir -p $GCLOUD_CONFIGS
@@ -17,13 +18,6 @@ account = $GCLOUD_ACCOUNT
 project = $GCLOUD_PROJECT
 disable_usage_reporting = True
 EOF
-
-gcloud kms keyrings list --project=$GCLOUD_PROJECT --location=$GCLOUD_LOCATION
-
-
-
-
-
 
 trap "VAULT_SHUTDOWN=1" SIGINT SIGTERM
 
@@ -55,7 +49,11 @@ do
         VAULT_RECOVER_INDEX=$((VAULT_RECOVER_INDEX+1))
     done
 
-    printf "VAULT_SECRET_VALUE: [%s]\n" "$VAULT_SECRET_VALUE"
+    printf "Update VAULT_SECRET_VALUE: [%s]\n" "$VAULT_SECRET_VALUE"
+
+    gcloud secrets list --project=$GCLOUD_PROJECT
+    gcloud secrets create $GCLOUD_SECRET --data-file=todo --project=$GCLOUD_PROJECT --replication-policy=user-managed --locations=$GCLOUD_LOCATIONS
+    echo y | gcloud secrets delete $GCLOUD_SECRET --project=$GCLOUD_PROJECT
 
 done
 

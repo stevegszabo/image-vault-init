@@ -58,11 +58,11 @@ do
 
     echo $VAULT_SECRET_VALUE > $VAULT_SEAL_FILE
 
-    gcloud secrets list --project=$GCLOUD_PROJECT
-    gcloud secrets list --project=$GCLOUD_PROJECT --format=json | jq -r "$GCLOUD_SECRET_FILTER"
-    gcloud secrets create $GCLOUD_SECRET --data-file=$VAULT_SEAL_FILE --project=$GCLOUD_PROJECT --replication-policy=user-managed --locations=$GCLOUD_LOCATIONS
-    gcloud secrets versions add $GCLOUD_SECRET --data-file=$VAULT_SEAL_FILE --project=$GCLOUD_PROJECT
-    echo y | gcloud secrets delete $GCLOUD_SECRET --project=$GCLOUD_PROJECT
+    if [ -z "$(gcloud secrets list --project=$GCLOUD_PROJECT --format=json | jq -r "$GCLOUD_SECRET_FILTER")" ]; then
+        gcloud secrets create $GCLOUD_SECRET --data-file=$VAULT_SEAL_FILE --project=$GCLOUD_PROJECT --replication-policy=user-managed --locations=$GCLOUD_LOCATIONS
+    else
+        gcloud secrets versions add $GCLOUD_SECRET --data-file=$VAULT_SEAL_FILE --project=$GCLOUD_PROJECT
+    fi
 
 done
 
